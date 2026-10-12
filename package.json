@@ -1,0 +1,56 @@
+{
+  "name": "@gang-of-beads/pi-web-goals",
+  "version": "0.1.0",
+  "description": "PI WEB plugin for pi-goal: a Goals tab listing the project's goals with their status and task progress, and short rows for goal events in the conversation.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi-web",
+    "pi-web-plugin",
+    "pi-goal"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gang-of-Beads/pi-web-goals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Gang-of-Beads/pi-web-goals/issues"
+  },
+  "homepage": "https://github.com/Gang-of-Beads/pi-web-goals#readme",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "piWeb": {
+    "plugins": [
+      {
+        "id": "goals",
+        "browserRoot": "dist/browser",
+        "module": "dist/browser/pi-web-plugin.js",
+        "serverModule": "dist/server-plugin.js",
+        "machineSpecific": true
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test && npm run build && git diff --exit-code -- dist"
+  },
+  "devDependencies": {
+    "@gang-of-beads/pi-web": "^2.202610.4",
+    "@types/node": "^24.13.3",
+    "esbuild": "^0.28.2",
+    "happy-dom": "^20.11.1",
+    "lit": "^3.3.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}
