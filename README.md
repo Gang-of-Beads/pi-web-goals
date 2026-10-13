@@ -20,7 +20,7 @@ The plugin has a server part, so restart the PI WEB session daemon, then reload 
 
 ## How it works
 
-The server part runs inside the PI WEB session daemon and only reads. It answers the browser's `goals.list` operation from the goal files pi-goal keeps in the project (`.pi/goals/*.md`); a session working in a subfolder of the project also sees that folder's goals, which take precedence by id. A goal file that cannot be parsed is skipped and counted; when no goal could be read, the tab says how many files failed instead of claiming the project has none. It declares the `goals` surface for pi-goal's tools, so PI WEB shows the tab only where those tools are loaded. The plugin is machine-specific: with several machines, each machine's own copy reads that machine's goals.
+The server part runs inside the PI WEB session daemon and only reads. It answers the browser's `goals.list` operation from the goal files pi-goal keeps in the project (`.pi/goals/*.md`); a session working in a subfolder of the project also sees that folder's goals, which take precedence by id. A goal file that cannot be parsed is skipped and counted; when no goal could be read, the tab says how many files failed instead of claiming the project has none. The tab reads the goals again when a turn of the selected session ends and each time it is opened. It declares the `goals` surface for pi-goal's tools, so PI WEB shows the tab only where those tools are loaded. The plugin is machine-specific: with several machines, each machine's own copy reads that machine's goals.
 
 ## Development
 

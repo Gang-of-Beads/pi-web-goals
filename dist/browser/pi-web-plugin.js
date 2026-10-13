@@ -1,30 +1,19 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __decorateClass = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
-  for (var i5 = decorators.length - 1, decorator; i5 >= 0; i5--)
-    if (decorator = decorators[i5])
-      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp(target, key, result);
-  return result;
-};
-
 // node_modules/@lit/reactive-element/css-tag.js
 var t = globalThis;
 var e = t.ShadowRoot && (void 0 === t.ShadyCSS || t.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype;
 var s = /* @__PURE__ */ Symbol();
 var o = /* @__PURE__ */ new WeakMap();
 var n = class {
-  constructor(t3, e5, o6) {
-    if (this._$cssResult$ = true, o6 !== s) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
-    this.cssText = t3, this.t = e5;
+  constructor(t3, e4, o5) {
+    if (this._$cssResult$ = true, o5 !== s) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+    this.cssText = t3, this.t = e4;
   }
   get styleSheet() {
     let t3 = this.o;
     const s4 = this.t;
     if (e && void 0 === t3) {
-      const e5 = void 0 !== s4 && 1 === s4.length;
-      e5 && (t3 = o.get(s4)), void 0 === t3 && ((this.o = t3 = new CSSStyleSheet()).replaceSync(this.cssText), e5 && o.set(s4, t3));
+      const e4 = void 0 !== s4 && 1 === s4.length;
+      e4 && (t3 = o.get(s4)), void 0 === t3 && ((this.o = t3 = new CSSStyleSheet()).replaceSync(this.cssText), e4 && o.set(s4, t3));
     }
     return t3;
   }
@@ -33,25 +22,17 @@ var n = class {
   }
 };
 var r = (t3) => new n("string" == typeof t3 ? t3 : t3 + "", void 0, s);
-var i = (t3, ...e5) => {
-  const o6 = 1 === t3.length ? t3[0] : e5.reduce((e6, s4, o7) => e6 + ((t4) => {
-    if (true === t4._$cssResult$) return t4.cssText;
-    if ("number" == typeof t4) return t4;
-    throw Error("Value passed to 'css' function must be a 'css' function result: " + t4 + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
-  })(s4) + t3[o7 + 1], t3[0]);
-  return new n(o6, t3, s);
-};
-var S = (s4, o6) => {
-  if (e) s4.adoptedStyleSheets = o6.map((t3) => t3 instanceof CSSStyleSheet ? t3 : t3.styleSheet);
-  else for (const e5 of o6) {
-    const o7 = document.createElement("style"), n5 = t.litNonce;
-    void 0 !== n5 && o7.setAttribute("nonce", n5), o7.textContent = e5.cssText, s4.appendChild(o7);
+var S = (s4, o5) => {
+  if (e) s4.adoptedStyleSheets = o5.map((t3) => t3 instanceof CSSStyleSheet ? t3 : t3.styleSheet);
+  else for (const e4 of o5) {
+    const o6 = document.createElement("style"), n4 = t.litNonce;
+    void 0 !== n4 && o6.setAttribute("nonce", n4), o6.textContent = e4.cssText, s4.appendChild(o6);
   }
 };
 var c = e ? (t3) => t3 : (t3) => t3 instanceof CSSStyleSheet ? ((t4) => {
-  let e5 = "";
-  for (const s4 of t4.cssRules) e5 += s4.cssText;
-  return r(e5);
+  let e4 = "";
+  for (const s4 of t4.cssRules) e4 += s4.cssText;
+  return r(e4);
 })(t3) : t3;
 
 // node_modules/@lit/reactive-element/reactive-element.js
@@ -107,14 +88,14 @@ var y = class extends HTMLElement {
     }
   }
   static getPropertyDescriptor(t3, s4, i5) {
-    const { get: e5, set: r6 } = h(this.prototype, t3) ?? { get() {
+    const { get: e4, set: r4 } = h(this.prototype, t3) ?? { get() {
       return this[s4];
     }, set(t4) {
       this[s4] = t4;
     } };
-    return { get: e5, set(s5) {
-      const h3 = e5?.call(this);
-      r6?.call(this, s5), this.requestUpdate(t3, h3, i5);
+    return { get: e4, set(s5) {
+      const h3 = e4?.call(this);
+      r4?.call(this, s5), this.requestUpdate(t3, h3, i5);
     }, configurable: true, enumerable: true };
   }
   static getPropertyOptions(t3) {
@@ -146,8 +127,8 @@ var y = class extends HTMLElement {
   static finalizeStyles(s4) {
     const i5 = [];
     if (Array.isArray(s4)) {
-      const e5 = new Set(s4.flat(1 / 0).reverse());
-      for (const s5 of e5) i5.unshift(c(s5));
+      const e4 = new Set(s4.flat(1 / 0).reverse());
+      for (const s5 of e4) i5.unshift(c(s5));
     } else void 0 !== s4 && i5.push(c(s4));
     return i5;
   }
@@ -188,31 +169,31 @@ var y = class extends HTMLElement {
     this._$AK(t3, i5);
   }
   _$ET(t3, s4) {
-    const i5 = this.constructor.elementProperties.get(t3), e5 = this.constructor._$Eu(t3, i5);
-    if (void 0 !== e5 && true === i5.reflect) {
+    const i5 = this.constructor.elementProperties.get(t3), e4 = this.constructor._$Eu(t3, i5);
+    if (void 0 !== e4 && true === i5.reflect) {
       const h3 = (void 0 !== i5.converter?.toAttribute ? i5.converter : u).toAttribute(s4, i5.type);
-      this._$Em = t3, null == h3 ? this.removeAttribute(e5) : this.setAttribute(e5, h3), this._$Em = null;
+      this._$Em = t3, null == h3 ? this.removeAttribute(e4) : this.setAttribute(e4, h3), this._$Em = null;
     }
   }
   _$AK(t3, s4) {
-    const i5 = this.constructor, e5 = i5._$Eh.get(t3);
-    if (void 0 !== e5 && this._$Em !== e5) {
-      const t4 = i5.getPropertyOptions(e5), h3 = "function" == typeof t4.converter ? { fromAttribute: t4.converter } : void 0 !== t4.converter?.fromAttribute ? t4.converter : u;
-      this._$Em = e5;
-      const r6 = h3.fromAttribute(s4, t4.type);
-      this[e5] = r6 ?? this._$Ej?.get(e5) ?? r6, this._$Em = null;
+    const i5 = this.constructor, e4 = i5._$Eh.get(t3);
+    if (void 0 !== e4 && this._$Em !== e4) {
+      const t4 = i5.getPropertyOptions(e4), h3 = "function" == typeof t4.converter ? { fromAttribute: t4.converter } : void 0 !== t4.converter?.fromAttribute ? t4.converter : u;
+      this._$Em = e4;
+      const r4 = h3.fromAttribute(s4, t4.type);
+      this[e4] = r4 ?? this._$Ej?.get(e4) ?? r4, this._$Em = null;
     }
   }
-  requestUpdate(t3, s4, i5, e5 = false, h3) {
+  requestUpdate(t3, s4, i5, e4 = false, h3) {
     if (void 0 !== t3) {
-      const r6 = this.constructor;
-      if (false === e5 && (h3 = this[t3]), i5 ??= r6.getPropertyOptions(t3), !((i5.hasChanged ?? f)(h3, s4) || i5.useDefault && i5.reflect && h3 === this._$Ej?.get(t3) && !this.hasAttribute(r6._$Eu(t3, i5)))) return;
+      const r4 = this.constructor;
+      if (false === e4 && (h3 = this[t3]), i5 ??= r4.getPropertyOptions(t3), !((i5.hasChanged ?? f)(h3, s4) || i5.useDefault && i5.reflect && h3 === this._$Ej?.get(t3) && !this.hasAttribute(r4._$Eu(t3, i5)))) return;
       this.C(t3, s4, i5);
     }
     false === this.isUpdatePending && (this._$ES = this._$EP());
   }
-  C(t3, s4, { useDefault: i5, reflect: e5, wrapped: h3 }, r6) {
-    i5 && !(this._$Ej ??= /* @__PURE__ */ new Map()).has(t3) && (this._$Ej.set(t3, r6 ?? s4 ?? this[t3]), true !== h3 || void 0 !== r6) || (this._$AL.has(t3) || (this.hasUpdated || i5 || (s4 = void 0), this._$AL.set(t3, s4)), true === e5 && this._$Em !== t3 && (this._$Eq ??= /* @__PURE__ */ new Set()).add(t3));
+  C(t3, s4, { useDefault: i5, reflect: e4, wrapped: h3 }, r4) {
+    i5 && !(this._$Ej ??= /* @__PURE__ */ new Map()).has(t3) && (this._$Ej.set(t3, r4 ?? s4 ?? this[t3]), true !== h3 || void 0 !== r4) || (this._$AL.has(t3) || (this.hasUpdated || i5 || (s4 = void 0), this._$AL.set(t3, s4)), true === e4 && this._$Em !== t3 && (this._$Eq ??= /* @__PURE__ */ new Set()).add(t3));
   }
   async _$EP() {
     this.isUpdatePending = true;
@@ -236,8 +217,8 @@ var y = class extends HTMLElement {
       }
       const t4 = this.constructor.elementProperties;
       if (t4.size > 0) for (const [s5, i5] of t4) {
-        const { wrapped: t5 } = i5, e5 = this[s5];
-        true !== t5 || this._$AL.has(s5) || void 0 === e5 || this.C(s5, void 0, i5, e5);
+        const { wrapped: t5 } = i5, e4 = this[s5];
+        true !== t5 || this._$AL.has(s5) || void 0 === e4 || this.C(s5, void 0, i5, e4);
       }
     }
     let t3 = false;
@@ -312,45 +293,45 @@ function V(t3, i5) {
   return void 0 !== e3 ? e3.createHTML(i5) : i5;
 }
 var N = (t3, i5) => {
-  const s4 = t3.length - 1, e5 = [];
-  let n5, l3 = 2 === i5 ? "<svg>" : 3 === i5 ? "<math>" : "", c4 = v;
+  const s4 = t3.length - 1, e4 = [];
+  let n4, l3 = 2 === i5 ? "<svg>" : 3 === i5 ? "<math>" : "", c4 = v;
   for (let i6 = 0; i6 < s4; i6++) {
     const s5 = t3[i6];
     let a3, u3, d3 = -1, f3 = 0;
-    for (; f3 < s5.length && (c4.lastIndex = f3, u3 = c4.exec(s5), null !== u3); ) f3 = c4.lastIndex, c4 === v ? "!--" === u3[1] ? c4 = _ : void 0 !== u3[1] ? c4 = m : void 0 !== u3[2] ? (y2.test(u3[2]) && (n5 = RegExp("</" + u3[2], "g")), c4 = p2) : void 0 !== u3[3] && (c4 = p2) : c4 === p2 ? ">" === u3[0] ? (c4 = n5 ?? v, d3 = -1) : void 0 === u3[1] ? d3 = -2 : (d3 = c4.lastIndex - u3[2].length, a3 = u3[1], c4 = void 0 === u3[3] ? p2 : '"' === u3[3] ? $ : g) : c4 === $ || c4 === g ? c4 = p2 : c4 === _ || c4 === m ? c4 = v : (c4 = p2, n5 = void 0);
+    for (; f3 < s5.length && (c4.lastIndex = f3, u3 = c4.exec(s5), null !== u3); ) f3 = c4.lastIndex, c4 === v ? "!--" === u3[1] ? c4 = _ : void 0 !== u3[1] ? c4 = m : void 0 !== u3[2] ? (y2.test(u3[2]) && (n4 = RegExp("</" + u3[2], "g")), c4 = p2) : void 0 !== u3[3] && (c4 = p2) : c4 === p2 ? ">" === u3[0] ? (c4 = n4 ?? v, d3 = -1) : void 0 === u3[1] ? d3 = -2 : (d3 = c4.lastIndex - u3[2].length, a3 = u3[1], c4 = void 0 === u3[3] ? p2 : '"' === u3[3] ? $ : g) : c4 === $ || c4 === g ? c4 = p2 : c4 === _ || c4 === m ? c4 = v : (c4 = p2, n4 = void 0);
     const x2 = c4 === p2 && t3[i6 + 1].startsWith("/>") ? " " : "";
-    l3 += c4 === v ? s5 + r3 : d3 >= 0 ? (e5.push(a3), s5.slice(0, d3) + h2 + s5.slice(d3) + o3 + x2) : s5 + o3 + (-2 === d3 ? i6 : x2);
+    l3 += c4 === v ? s5 + r3 : d3 >= 0 ? (e4.push(a3), s5.slice(0, d3) + h2 + s5.slice(d3) + o3 + x2) : s5 + o3 + (-2 === d3 ? i6 : x2);
   }
-  return [V(t3, l3 + (t3[s4] || "<?>") + (2 === i5 ? "</svg>" : 3 === i5 ? "</math>" : "")), e5];
+  return [V(t3, l3 + (t3[s4] || "<?>") + (2 === i5 ? "</svg>" : 3 === i5 ? "</math>" : "")), e4];
 };
 var S2 = class _S {
-  constructor({ strings: t3, _$litType$: i5 }, e5) {
-    let r6;
+  constructor({ strings: t3, _$litType$: i5 }, e4) {
+    let r4;
     this.parts = [];
     let l3 = 0, a3 = 0;
     const u3 = t3.length - 1, d3 = this.parts, [f3, v2] = N(t3, i5);
-    if (this.el = _S.createElement(f3, e5), P.currentNode = this.el.content, 2 === i5 || 3 === i5) {
+    if (this.el = _S.createElement(f3, e4), P.currentNode = this.el.content, 2 === i5 || 3 === i5) {
       const t4 = this.el.content.firstChild;
       t4.replaceWith(...t4.childNodes);
     }
-    for (; null !== (r6 = P.nextNode()) && d3.length < u3; ) {
-      if (1 === r6.nodeType) {
-        if (r6.hasAttributes()) for (const t4 of r6.getAttributeNames()) if (t4.endsWith(h2)) {
-          const i6 = v2[a3++], s4 = r6.getAttribute(t4).split(o3), e6 = /([.?@])?(.*)/.exec(i6);
-          d3.push({ type: 1, index: l3, name: e6[2], strings: s4, ctor: "." === e6[1] ? I : "?" === e6[1] ? L : "@" === e6[1] ? z : H }), r6.removeAttribute(t4);
-        } else t4.startsWith(o3) && (d3.push({ type: 6, index: l3 }), r6.removeAttribute(t4));
-        if (y2.test(r6.tagName)) {
-          const t4 = r6.textContent.split(o3), i6 = t4.length - 1;
+    for (; null !== (r4 = P.nextNode()) && d3.length < u3; ) {
+      if (1 === r4.nodeType) {
+        if (r4.hasAttributes()) for (const t4 of r4.getAttributeNames()) if (t4.endsWith(h2)) {
+          const i6 = v2[a3++], s4 = r4.getAttribute(t4).split(o3), e5 = /([.?@])?(.*)/.exec(i6);
+          d3.push({ type: 1, index: l3, name: e5[2], strings: s4, ctor: "." === e5[1] ? I : "?" === e5[1] ? L : "@" === e5[1] ? z : H }), r4.removeAttribute(t4);
+        } else t4.startsWith(o3) && (d3.push({ type: 6, index: l3 }), r4.removeAttribute(t4));
+        if (y2.test(r4.tagName)) {
+          const t4 = r4.textContent.split(o3), i6 = t4.length - 1;
           if (i6 > 0) {
-            r6.textContent = s2 ? s2.emptyScript : "";
-            for (let s4 = 0; s4 < i6; s4++) r6.append(t4[s4], c3()), P.nextNode(), d3.push({ type: 2, index: ++l3 });
-            r6.append(t4[i6], c3());
+            r4.textContent = s2 ? s2.emptyScript : "";
+            for (let s4 = 0; s4 < i6; s4++) r4.append(t4[s4], c3()), P.nextNode(), d3.push({ type: 2, index: ++l3 });
+            r4.append(t4[i6], c3());
           }
         }
-      } else if (8 === r6.nodeType) if (r6.data === n3) d3.push({ type: 2, index: l3 });
+      } else if (8 === r4.nodeType) if (r4.data === n3) d3.push({ type: 2, index: l3 });
       else {
         let t4 = -1;
-        for (; -1 !== (t4 = r6.data.indexOf(o3, t4 + 1)); ) d3.push({ type: 7, index: l3 }), t4 += o3.length - 1;
+        for (; -1 !== (t4 = r4.data.indexOf(o3, t4 + 1)); ) d3.push({ type: 7, index: l3 }), t4 += o3.length - 1;
       }
       l3++;
     }
@@ -360,11 +341,11 @@ var S2 = class _S {
     return s4.innerHTML = t3, s4;
   }
 };
-function M(t3, i5, s4 = t3, e5) {
+function M(t3, i5, s4 = t3, e4) {
   if (i5 === E) return i5;
-  let h3 = void 0 !== e5 ? s4._$Co?.[e5] : s4._$Cl;
-  const o6 = a2(i5) ? void 0 : i5._$litDirective$;
-  return h3?.constructor !== o6 && (h3?._$AO?.(false), void 0 === o6 ? h3 = void 0 : (h3 = new o6(t3), h3._$AT(t3, s4, e5)), void 0 !== e5 ? (s4._$Co ??= [])[e5] = h3 : s4._$Cl = h3), void 0 !== h3 && (i5 = M(t3, h3._$AS(t3, i5.values), h3, e5)), i5;
+  let h3 = void 0 !== e4 ? s4._$Co?.[e4] : s4._$Cl;
+  const o5 = a2(i5) ? void 0 : i5._$litDirective$;
+  return h3?.constructor !== o5 && (h3?._$AO?.(false), void 0 === o5 ? h3 = void 0 : (h3 = new o5(t3), h3._$AT(t3, s4, e4)), void 0 !== e4 ? (s4._$Co ??= [])[e4] = h3 : s4._$Cl = h3), void 0 !== h3 && (i5 = M(t3, h3._$AS(t3, i5.values), h3, e4)), i5;
 }
 var R = class {
   constructor(t3, i5) {
@@ -377,17 +358,17 @@ var R = class {
     return this._$AM._$AU;
   }
   u(t3) {
-    const { el: { content: i5 }, parts: s4 } = this._$AD, e5 = (t3?.creationScope ?? l2).importNode(i5, true);
-    P.currentNode = e5;
-    let h3 = P.nextNode(), o6 = 0, n5 = 0, r6 = s4[0];
-    for (; void 0 !== r6; ) {
-      if (o6 === r6.index) {
+    const { el: { content: i5 }, parts: s4 } = this._$AD, e4 = (t3?.creationScope ?? l2).importNode(i5, true);
+    P.currentNode = e4;
+    let h3 = P.nextNode(), o5 = 0, n4 = 0, r4 = s4[0];
+    for (; void 0 !== r4; ) {
+      if (o5 === r4.index) {
         let i6;
-        2 === r6.type ? i6 = new k(h3, h3.nextSibling, this, t3) : 1 === r6.type ? i6 = new r6.ctor(h3, r6.name, r6.strings, this, t3) : 6 === r6.type && (i6 = new Z(h3, this, t3)), this._$AV.push(i6), r6 = s4[++n5];
+        2 === r4.type ? i6 = new k(h3, h3.nextSibling, this, t3) : 1 === r4.type ? i6 = new r4.ctor(h3, r4.name, r4.strings, this, t3) : 6 === r4.type && (i6 = new Z(h3, this, t3)), this._$AV.push(i6), r4 = s4[++n4];
       }
-      o6 !== r6?.index && (h3 = P.nextNode(), o6++);
+      o5 !== r4?.index && (h3 = P.nextNode(), o5++);
     }
-    return P.currentNode = l2, e5;
+    return P.currentNode = l2, e4;
   }
   p(t3) {
     let i5 = 0;
@@ -398,8 +379,8 @@ var k = class _k {
   get _$AU() {
     return this._$AM?._$AU ?? this._$Cv;
   }
-  constructor(t3, i5, s4, e5) {
-    this.type = 2, this._$AH = A, this._$AN = void 0, this._$AA = t3, this._$AB = i5, this._$AM = s4, this.options = e5, this._$Cv = e5?.isConnected ?? true;
+  constructor(t3, i5, s4, e4) {
+    this.type = 2, this._$AH = A, this._$AN = void 0, this._$AA = t3, this._$AB = i5, this._$AM = s4, this.options = e4, this._$Cv = e4?.isConnected ?? true;
   }
   get parentNode() {
     let t3 = this._$AA.parentNode;
@@ -425,10 +406,10 @@ var k = class _k {
     this._$AH !== A && a2(this._$AH) ? this._$AA.nextSibling.data = t3 : this.T(l2.createTextNode(t3)), this._$AH = t3;
   }
   $(t3) {
-    const { values: i5, _$litType$: s4 } = t3, e5 = "number" == typeof s4 ? this._$AC(t3) : (void 0 === s4.el && (s4.el = S2.createElement(V(s4.h, s4.h[0]), this.options)), s4);
-    if (this._$AH?._$AD === e5) this._$AH.p(i5);
+    const { values: i5, _$litType$: s4 } = t3, e4 = "number" == typeof s4 ? this._$AC(t3) : (void 0 === s4.el && (s4.el = S2.createElement(V(s4.h, s4.h[0]), this.options)), s4);
+    if (this._$AH?._$AD === e4) this._$AH.p(i5);
     else {
-      const t4 = new R(e5, this), s5 = t4.u(this.options);
+      const t4 = new R(e4, this), s5 = t4.u(this.options);
       t4.p(i5), this.T(s5), this._$AH = t4;
     }
   }
@@ -439,9 +420,9 @@ var k = class _k {
   k(t3) {
     u2(this._$AH) || (this._$AH = [], this._$AR());
     const i5 = this._$AH;
-    let s4, e5 = 0;
-    for (const h3 of t3) e5 === i5.length ? i5.push(s4 = new _k(this.O(c3()), this.O(c3()), this, this.options)) : s4 = i5[e5], s4._$AI(h3), e5++;
-    e5 < i5.length && (this._$AR(s4 && s4._$AB.nextSibling, e5), i5.length = e5);
+    let s4, e4 = 0;
+    for (const h3 of t3) e4 === i5.length ? i5.push(s4 = new _k(this.O(c3()), this.O(c3()), this, this.options)) : s4 = i5[e4], s4._$AI(h3), e4++;
+    e4 < i5.length && (this._$AR(s4 && s4._$AB.nextSibling, e4), i5.length = e4);
   }
   _$AR(t3 = this._$AA.nextSibling, s4) {
     for (this._$AP?.(false, true, s4); t3 !== this._$AB; ) {
@@ -460,19 +441,19 @@ var H = class {
   get _$AU() {
     return this._$AM._$AU;
   }
-  constructor(t3, i5, s4, e5, h3) {
-    this.type = 1, this._$AH = A, this._$AN = void 0, this.element = t3, this.name = i5, this._$AM = e5, this.options = h3, s4.length > 2 || "" !== s4[0] || "" !== s4[1] ? (this._$AH = Array(s4.length - 1).fill(new String()), this.strings = s4) : this._$AH = A;
+  constructor(t3, i5, s4, e4, h3) {
+    this.type = 1, this._$AH = A, this._$AN = void 0, this.element = t3, this.name = i5, this._$AM = e4, this.options = h3, s4.length > 2 || "" !== s4[0] || "" !== s4[1] ? (this._$AH = Array(s4.length - 1).fill(new String()), this.strings = s4) : this._$AH = A;
   }
-  _$AI(t3, i5 = this, s4, e5) {
+  _$AI(t3, i5 = this, s4, e4) {
     const h3 = this.strings;
-    let o6 = false;
-    if (void 0 === h3) t3 = M(this, t3, i5, 0), o6 = !a2(t3) || t3 !== this._$AH && t3 !== E, o6 && (this._$AH = t3);
+    let o5 = false;
+    if (void 0 === h3) t3 = M(this, t3, i5, 0), o5 = !a2(t3) || t3 !== this._$AH && t3 !== E, o5 && (this._$AH = t3);
     else {
-      const e6 = t3;
-      let n5, r6;
-      for (t3 = h3[0], n5 = 0; n5 < h3.length - 1; n5++) r6 = M(this, e6[s4 + n5], i5, n5), r6 === E && (r6 = this._$AH[n5]), o6 ||= !a2(r6) || r6 !== this._$AH[n5], r6 === A ? t3 = A : t3 !== A && (t3 += (r6 ?? "") + h3[n5 + 1]), this._$AH[n5] = r6;
+      const e5 = t3;
+      let n4, r4;
+      for (t3 = h3[0], n4 = 0; n4 < h3.length - 1; n4++) r4 = M(this, e5[s4 + n4], i5, n4), r4 === E && (r4 = this._$AH[n4]), o5 ||= !a2(r4) || r4 !== this._$AH[n4], r4 === A ? t3 = A : t3 !== A && (t3 += (r4 ?? "") + h3[n4 + 1]), this._$AH[n4] = r4;
     }
-    o6 && !e5 && this.j(t3);
+    o5 && !e4 && this.j(t3);
   }
   j(t3) {
     t3 === A ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t3 ?? "");
@@ -495,13 +476,13 @@ var L = class extends H {
   }
 };
 var z = class extends H {
-  constructor(t3, i5, s4, e5, h3) {
-    super(t3, i5, s4, e5, h3), this.type = 5;
+  constructor(t3, i5, s4, e4, h3) {
+    super(t3, i5, s4, e4, h3), this.type = 5;
   }
   _$AI(t3, i5 = this) {
     if ((t3 = M(this, t3, i5, 0) ?? A) === E) return;
-    const s4 = this._$AH, e5 = t3 === A && s4 !== A || t3.capture !== s4.capture || t3.once !== s4.once || t3.passive !== s4.passive, h3 = t3 !== A && (s4 === A || e5);
-    e5 && this.element.removeEventListener(this.name, this, s4), h3 && this.element.addEventListener(this.name, this, t3), this._$AH = t3;
+    const s4 = this._$AH, e4 = t3 === A && s4 !== A || t3.capture !== s4.capture || t3.once !== s4.once || t3.passive !== s4.passive, h3 = t3 !== A && (s4 === A || e4);
+    e4 && this.element.removeEventListener(this.name, this, s4), h3 && this.element.addEventListener(this.name, this, t3), this._$AH = t3;
   }
   handleEvent(t3) {
     "function" == typeof this._$AH ? this._$AH.call(this.options?.host ?? this.element, t3) : this._$AH.handleEvent(t3);
@@ -521,11 +502,11 @@ var Z = class {
 var B = t2.litHtmlPolyfillSupport;
 B?.(S2, k), (t2.litHtmlVersions ??= []).push("3.3.3");
 var D = (t3, i5, s4) => {
-  const e5 = s4?.renderBefore ?? i5;
-  let h3 = e5._$litPart$;
+  const e4 = s4?.renderBefore ?? i5;
+  let h3 = e4._$litPart$;
   if (void 0 === h3) {
     const t4 = s4?.renderBefore ?? null;
-    e5._$litPart$ = h3 = new k(i5.insertBefore(c3(), t4), t4, void 0, s4 ?? {});
+    e4._$litPart$ = h3 = new k(i5.insertBefore(c3(), t4), t4, void 0, s4 ?? {});
   }
   return h3._$AI(t3), h3;
 };
@@ -541,8 +522,8 @@ var i4 = class extends y {
     return this.renderOptions.renderBefore ??= t3.firstChild, t3;
   }
   update(t3) {
-    const r6 = this.render();
-    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t3), this._$Do = D(r6, this.renderRoot, this.renderOptions);
+    const r4 = this.render();
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t3), this._$Do = D(r4, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
     super.connectedCallback(), this._$Do?.setConnected(true);
@@ -559,69 +540,7 @@ var o4 = s3.litElementPolyfillSupport;
 o4?.({ LitElement: i4 });
 (s3.litElementVersions ??= []).push("4.2.2");
 
-// src/hostUi.ts
-var hostUi;
-function rememberGoalsHostUi(ui) {
-  hostUi = ui;
-}
-function adoptGoalsHostStyles(root) {
-  if (hostUi === void 0) return;
-  hostUi.adoptSheets?.(root, [hostUi.surfaceStyles]);
-}
-
-// node_modules/@lit/reactive-element/decorators/property.js
-var o5 = { attribute: true, type: String, converter: u, reflect: false, hasChanged: f };
-var r4 = (t3 = o5, e5, r6) => {
-  const { kind: n5, metadata: i5 } = r6;
-  let s4 = globalThis.litPropertyMetadata.get(i5);
-  if (void 0 === s4 && globalThis.litPropertyMetadata.set(i5, s4 = /* @__PURE__ */ new Map()), "setter" === n5 && ((t3 = Object.create(t3)).wrapped = true), s4.set(r6.name, t3), "accessor" === n5) {
-    const { name: o6 } = r6;
-    return { set(r7) {
-      const n6 = e5.get.call(this);
-      e5.set.call(this, r7), this.requestUpdate(o6, n6, t3, true, r7);
-    }, init(e6) {
-      return void 0 !== e6 && this.C(o6, void 0, t3, e6), e6;
-    } };
-  }
-  if ("setter" === n5) {
-    const { name: o6 } = r6;
-    return function(r7) {
-      const n6 = this[o6];
-      e5.call(this, r7), this.requestUpdate(o6, n6, t3, true, r7);
-    };
-  }
-  throw Error("Unsupported decorator location: " + n5);
-};
-function n4(t3) {
-  return (e5, o6) => "object" == typeof o6 ? r4(t3, e5, o6) : ((t4, e6, o7) => {
-    const r6 = e6.hasOwnProperty(o7);
-    return e6.constructor.createProperty(o7, t4), r6 ? Object.getOwnPropertyDescriptor(e6, o7) : void 0;
-  })(t3, e5, o6);
-}
-
-// node_modules/@lit/reactive-element/decorators/state.js
-function r5(r6) {
-  return n4({ ...r6, state: true, attribute: false });
-}
-
-// src/goalsSectionElement.ts
-var goalsSectionStyles = `
-  :host { display: block; box-sizing: border-box; flex: 1 1 auto; min-height: 0; overflow: auto; padding: var(--pi-space-5) var(--pi-reading-edge); color: var(--pi-text); font: var(--pi-text-sm) var(--pi-font-ui, system-ui, sans-serif); line-height: inherit; }
-  .goal-row { display: flex; align-items: flex-start; gap: var(--pi-space-4); padding: var(--pi-space-3) 0; }
-  .dot { flex: 0 0 auto; width: var(--pi-dot-md); height: var(--pi-dot-md); margin-top: var(--pi-space-3); border-radius: 50%; background: var(--pi-accent); }
-  .goal-row[data-status="paused"] .dot, .goal-row[data-status="budget_limited"] .dot { background: var(--pi-muted); }
-  .goal-row[data-status="blocked"] .dot { background: var(--pi-danger, #c0392b); }
-  .goal-row[data-status="complete"] .dot { background: var(--pi-success, #2e7d32); }
-  .goal-main { flex: 1 1 auto; min-width: 0; }
-  .objective { margin: 0; color: var(--pi-text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
-  .progress { margin: var(--pi-space-1) 0 0; color: var(--pi-muted); font-size: var(--pi-text-xs); }
-  .goal-refresh-icon { width: 16px; height: 16px; }
-    .refresh { font: inherit; box-sizing: border-box; flex: 0 0 auto; display: inline-grid; place-items: center; width: var(--pi-control-height); height: var(--pi-control-height); padding: 0; border: 0; border-radius: var(--pi-radius-sm); background: transparent; color: var(--pi-muted); font-size: var(--pi-text-md); cursor: pointer; }
-  @media (pointer: coarse) { .refresh { width: var(--pi-control-height-touch, 44px); height: var(--pi-control-height-touch, 44px); } .refresh:active { background: var(--pi-surface-hover); } }
-  @media (hover: hover) { .refresh:hover { color: var(--pi-text); background: var(--pi-surface-hover); } }
-  .refresh:focus-visible { outline: var(--pi-focus-ring-width) solid var(--pi-accent); outline-offset: var(--pi-focus-ring-offset-tight); }
-  .pending { margin: 0; padding: var(--pi-space-3) 0; color: var(--pi-muted); font-size: var(--pi-text-xs); }
-`;
+// src/goalsList.ts
 function emptyGoalsWords(brokenFiles) {
   if (brokenFiles === 0) return "No goals in this project.";
   return `${String(brokenFiles)} goal ${brokenFiles === 1 ? "file" : "files"} in this project could not be read.`;
@@ -641,73 +560,33 @@ function badgeFor(state) {
   if (goal.status === "complete" || remaining <= 0) return void 0;
   return remaining;
 }
-var PiWebGoalsSection = class extends i4 {
-  constructor() {
-    super(...arguments);
-    this.state = void 0;
-    this.failed = false;
-    this.refreshing = false;
-    this.handleRefresh = () => {
-      if (this.refreshing) return;
-      this.refreshing = true;
-      try {
-        this.onRefresh?.();
-      } finally {
-        this.refreshing = false;
-      }
-    };
-  }
-  static {
-    this.styles = [i`${r(goalsSectionStyles)}`];
-  }
-  createRenderRoot() {
-    const root = super.createRenderRoot();
-    if (root instanceof ShadowRoot) adoptGoalsHostStyles(root);
-    return root;
-  }
-  renderRefresh() {
-    return b2`<button
-      class="refresh"
-      type="button"
-      title="Re-read goal records from the project"
-      aria-label="Refresh goals"
-      @click=${this.handleRefresh}
-    ><svg class="goal-refresh-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg></button>`;
-  }
-  render() {
-    const goal = activeGoal(this.state);
-    if (goal === void 0) {
-      if (this.failed) return b2`<div class="goal-row"><p class="pending goal-main" role="status">Goal records could not be read on this machine.</p>${this.renderRefresh()}</div>`;
-      if (this.state === void 0) return b2`<p class="pending">Reading goal records…</p>`;
-      return b2`<div class="goal-row"><p class="pending goal-main" role="status">${emptyGoalsWords(this.state.brokenFiles)}</p>${this.renderRefresh()}</div>`;
-    }
-    const progress = progressLabel(goal);
-    return b2`
-      ${this.failed ? b2`<p class="pending" role="status">Could not refresh - showing the last read.</p>` : A}
-      <div class="goal-row" data-status=${goal.status}>
-        <span class="dot" aria-hidden="true"></span>
-        <div class="goal-main">
-          <p class="objective">${goal.objective}</p>
-          ${progress === void 0 ? A : b2`<p class="progress">${progress}</p>`}
-        </div>
-        ${this.renderRefresh()}
-      </div>
-    `;
-  }
+var ROW_SIDE = {
+  active: { status: { label: "active", tone: "good" } },
+  paused: { status: { label: "paused", tone: "neutral" } },
+  budget_limited: { status: { label: "budget limited", tone: "attention" } },
+  blocked: { status: { label: "blocked", tone: "problem" } },
+  complete: { value: "complete" }
 };
-__decorateClass([
-  n4({ attribute: false })
-], PiWebGoalsSection.prototype, "state", 2);
-__decorateClass([
-  n4({ attribute: false })
-], PiWebGoalsSection.prototype, "failed", 2);
-__decorateClass([
-  n4({ attribute: false })
-], PiWebGoalsSection.prototype, "onRefresh", 2);
-__decorateClass([
-  r5()
-], PiWebGoalsSection.prototype, "refreshing", 2);
-if (customElements.get("pi-web-goals-section") === void 0) customElements.define("pi-web-goals-section", PiWebGoalsSection);
+function goalRow(goal) {
+  const progress = progressLabel(goal);
+  return { id: goal.id, title: goal.objective, ...ROW_SIDE[goal.status], ...progress === void 0 ? {} : { detail: progress } };
+}
+function listRead(read2, answer) {
+  if (read2 === "failed") return "failed";
+  return read2 === "reading" && answer === void 0 ? "reading" : "ready";
+}
+function goalsListModel(read2, answer) {
+  return {
+    read: listRead(read2, answer),
+    words: {
+      empty: emptyGoalsWords(answer?.brokenFiles ?? 0),
+      reading: "Reading this project's goals\u2026",
+      failed: "Goal records could not be read on this machine.",
+      stale: "Could not refresh - showing the last read."
+    },
+    groups: [{ id: "goals", rows: (answer?.goals ?? []).map(goalRow) }]
+  };
+}
 
 // src/goalEventSummary.ts
 var TITLES = {
@@ -753,14 +632,22 @@ var isGoalSummary = (value) => {
 function readKey(workspacePath, sessionCwd) {
   return JSON.stringify([workspacePath, sessionCwd ?? null]);
 }
+function readFailureOf(ui, error, attempt) {
+  const host = ui;
+  const answer = host?.readFailure?.(error, attempt);
+  if (answer?.kind === "final") return { kind: "final" };
+  return { kind: "retry", delayMs: answer?.delayMs ?? Math.min(1e3 * 2 ** attempt, 15e3) };
+}
 var plugin = {
   apiVersion: 2,
   name: "Goals",
   activate: (context) => {
-    rememberGoalsHostUi(context.ui);
-    const callOperation = context.callOperation;
+    const { ui, callOperation } = context;
     let cache;
     let issued = 0;
+    let misses = 0;
+    let retryTimer;
+    let readLatestAgain;
     const listGoals = async (workspacePath, sessionCwd) => {
       if (callOperation === void 0) return { goals: [], brokenFiles: 0 };
       const input = sessionCwd === void 0 ? { workspacePath } : { workspacePath, sessionCwd };
@@ -772,6 +659,9 @@ var plugin = {
     };
     const read2 = (workspacePath, sessionCwd, requestUpdate) => {
       const key = readKey(workspacePath, sessionCwd);
+      if (cache?.key !== key) misses = 0;
+      if (retryTimer !== void 0) clearTimeout(retryTimer);
+      retryTimer = void 0;
       const seq = ++issued;
       cache = { key, seq, read: "reading", ...cache?.key === key && cache.answer !== void 0 ? { answer: cache.answer } : {} };
       const settle = (next) => {
@@ -781,10 +671,19 @@ var plugin = {
       };
       void listGoals(workspacePath, sessionCwd).then(
         (answer) => {
+          misses = 0;
           settle({ read: "read", answer });
         },
-        () => {
-          settle({ read: "failed", ...cache?.answer === void 0 ? {} : { answer: cache.answer } });
+        (error) => {
+          if (cache?.key !== key || cache.seq !== seq) return;
+          const failure = readFailureOf(ui, error, misses++);
+          if (failure.kind === "final") {
+            settle({ read: "failed", ...cache.answer === void 0 ? {} : { answer: cache.answer } });
+            return;
+          }
+          retryTimer = setTimeout(() => {
+            if (cache?.key === key && cache.seq === seq) read2(workspacePath, sessionCwd, requestUpdate);
+          }, failure.delayMs);
         }
       );
     };
@@ -792,11 +691,18 @@ var plugin = {
     const reading = (panel) => {
       const workspacePath = panel.workspace.path;
       const sessionCwd = panel.state?.selectedSession?.cwd;
-      if (cacheFor(workspacePath, sessionCwd) === void 0) read2(workspacePath, sessionCwd, () => {
+      const requestUpdate = () => {
         panel.host.requestRender();
-      });
+      };
+      readLatestAgain = () => {
+        read2(workspacePath, sessionCwd, requestUpdate);
+      };
+      if (cacheFor(workspacePath, sessionCwd) === void 0) read2(workspacePath, sessionCwd, requestUpdate);
       return cacheFor(workspacePath, sessionCwd);
     };
+    context.on?.("session-activity-settled", () => {
+      readLatestAgain?.();
+    });
     return {
       contributions: {
         messageRenderers: GOAL_EVENT_TAGS.map((tag) => ({
@@ -815,20 +721,15 @@ var plugin = {
             icon: w`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="0.8"></circle></svg>`,
             order: 30,
             badge: (panel) => badgeFor(reading(panel)?.answer),
-            render: (panel) => {
-              const workspacePath = panel.workspace.path;
-              const sessionCwd = panel.state?.selectedSession?.cwd;
-              const requestUpdate = () => {
+            onInvalidate: (panel) => {
+              read2(panel.workspace.path, panel.state?.selectedSession?.cwd, () => {
                 panel.host.requestRender();
-              };
+              });
+            },
+            render: (panel) => {
+              if (ui?.renderList === void 0) return b2`<p class="muted">This list needs a newer PI WEB on this device.</p>`;
               const known = reading(panel);
-              return b2`<pi-web-goals-section
-                .state=${known?.answer}
-                .failed=${known?.read === "failed"}
-                .onRefresh=${() => {
-                read2(workspacePath, sessionCwd, requestUpdate);
-              }}
-              ></pi-web-goals-section>`;
+              return ui.renderList(goalsListModel(known?.read ?? "reading", known?.answer));
             }
           }
         ]
@@ -852,15 +753,6 @@ export {
 @lit/reactive-element/reactive-element.js:
 lit-html/lit-html.js:
 lit-element/lit-element.js:
-@lit/reactive-element/decorators/custom-element.js:
-@lit/reactive-element/decorators/property.js:
-@lit/reactive-element/decorators/state.js:
-@lit/reactive-element/decorators/event-options.js:
-@lit/reactive-element/decorators/base.js:
-@lit/reactive-element/decorators/query.js:
-@lit/reactive-element/decorators/query-all.js:
-@lit/reactive-element/decorators/query-async.js:
-@lit/reactive-element/decorators/query-assigned-nodes.js:
   (**
    * @license
    * Copyright 2017 Google LLC
@@ -871,13 +763,6 @@ lit-html/is-server.js:
   (**
    * @license
    * Copyright 2022 Google LLC
-   * SPDX-License-Identifier: BSD-3-Clause
-   *)
-
-@lit/reactive-element/decorators/query-assigned-elements.js:
-  (**
-   * @license
-   * Copyright 2021 Google LLC
    * SPDX-License-Identifier: BSD-3-Clause
    *)
 */

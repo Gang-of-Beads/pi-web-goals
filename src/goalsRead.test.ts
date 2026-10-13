@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { html as litHtml, render as litRender, svg as litSvg } from "lit";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PluginActivationContext, WorkspacePanelContext, WorkspacePanelContribution } from "@gang-of-beads/pi-web/plugin-api";
+import type { PluginActivationContext, PluginListModel, WorkspacePanelContext, WorkspacePanelContribution } from "@gang-of-beads/pi-web/plugin-api";
 import type { GoalRecordSummary } from "./goalRecords.js";
 import plugin from "./pi-web-plugin.js";
 
@@ -30,39 +30,58 @@ function harnessFor(section: WorkspacePanelContribution, sessionCwd: string): Ha
   const container = document.createElement("div");
   document.body.append(container);
   const state = { selectedSession: { id: "s", cwd: sessionCwd } };
+  let opened = false;
   const context = {
     machine: { id: "m", name: "m" },
     workspace: { id: "w", projectId: "p", path: WORKSPACE, label: "w", isMain: true },
     state,
-    host: { requestRender: () => { harness.draw(); }, workspacePanelFullscreen: () => false, setWorkspacePanelFullscreen: () => undefined },
+    host: { requestRender: () => { if (opened) harness.draw(); }, workspacePanelFullscreen: () => false, setWorkspacePanelFullscreen: () => undefined },
   } as unknown as WorkspacePanelContext;
   const harness: Harness = {
     container,
     context,
-    draw: () => { litRender(section.render(context), container); },
+    draw: () => { opened = true; litRender(section.render(context), container); },
     setSessionCwd: (cwd) => { Reflect.set(state.selectedSession, "cwd", cwd); },
   };
   return harness;
 }
 
-function sectionOf(callOperation: (operation: string, input: unknown) => Promise<unknown>): WorkspacePanelContribution {
-  const context = { apiVersion: 2, pluginId: "goals", runtimePluginId: "goals", html: litHtml, svg: litSvg, callOperation } as unknown as PluginActivationContext;
-  const section = plugin.activate(context).contributions.workspacePanels?.[0];
-  if (section === undefined) throw new Error("the goals plugin contributes no page");
-  return section;
+/** The host's list, reduced to its text: the rows' titles, or the empty box's words for the read state. */
+function listText(model: PluginListModel): string {
+  const titles = model.groups.flatMap((group) => group.rows.map((row) => row.title));
+  const box = { reading: model.words.reading, ready: model.words.empty, failed: model.words.failed }[model.read];
+  const banner = model.read === "failed" ? `${model.words.stale} ` : "";
+  return titles.length === 0 ? `[box] ${box}` : `${banner}${titles.join(" ")}`;
+}
+
+const LIST_UI = { renderList: (model: PluginListModel) => litHtml`${listText(model)}` };
+
+interface Section {
+  readonly panel: WorkspacePanelContribution;
+  settleActivity(): void;
+}
+
+type ReadFailureAnswer = { kind: "retry"; delayMs: number } | { kind: "final"; words: string };
+
+function sectionOf(callOperation: (operation: string, input: unknown) => Promise<unknown>, readFailure?: () => ReadFailureAnswer): Section {
+  const settledListeners: (() => void)[] = [];
+  const on = (kind: string, listener: () => void) => {
+    if (kind === "session-activity-settled") settledListeners.push(listener);
+    return () => undefined;
+  };
+  const context = { apiVersion: 2, pluginId: "goals", runtimePluginId: "goals", html: litHtml, svg: litSvg, callOperation, on, ui: readFailure === undefined ? LIST_UI : { ...LIST_UI, readFailure } } as unknown as PluginActivationContext;
+  const panel = plugin.activate(context).contributions.workspacePanels?.[0];
+  if (panel === undefined) throw new Error("the goals plugin contributes no page");
+  return { panel, settleActivity: () => { for (const listener of settledListeners) listener(); } };
 }
 
 const flush = async (): Promise<void> => {
   for (let i = 0; i < 3; i += 1) await new Promise((resolve) => setTimeout(resolve, 1));
 };
 
-/** The section draws a custom element, so its words live in that shadow root. */
 async function shownText(container: HTMLElement): Promise<string> {
   await flush();
-  const element = container.querySelector("pi-web-goals-section") as (HTMLElement & { updateComplete?: Promise<unknown> }) | null;
-  if (element === null) return "";
-  await element.updateComplete;
-  return (element.shadowRoot?.textContent ?? "").replace(/\s+/gu, " ").trim();
+  return (container.textContent ?? "").replace(/\s+/gu, " ").trim();
 }
 
 afterEach(() => { document.body.replaceChildren(); vi.restoreAllMocks(); });
@@ -75,7 +94,7 @@ describe("the goals section read", () => {
    */
   it("fills the Go to count without the page being opened", async () => {
     const callOperation = vi.fn(async () => ({ goals: [goal("a")], brokenFiles: 0 }));
-    const section = sectionOf(callOperation);
+    const { panel: section } = sectionOf(callOperation);
     const harness = harnessFor(section, "/w/session-a");
 
     expect(section.badge?.(harness.context)).toBeUndefined();
@@ -88,7 +107,7 @@ describe("the goals section read", () => {
 
   it("reads once per workspace and shows what it read", async () => {
     const callOperation = vi.fn(async () => ({ goals: [goal("a")], brokenFiles: 0 }));
-    const section = sectionOf(callOperation);
+    const { panel: section } = sectionOf(callOperation);
     const harness = harnessFor(section, "/w/session-a");
     harness.draw();
     await flush();
@@ -107,7 +126,7 @@ describe("the goals section read", () => {
       const cwd = (input as { sessionCwd?: string }).sessionCwd;
       return { goals: [goal(cwd === "/w/session-b" ? "from-b" : "from-a")], brokenFiles: 0 };
     });
-    const section = sectionOf(callOperation);
+    const { panel: section } = sectionOf(callOperation);
     const harness = harnessFor(section, "/w/session-a");
     harness.draw();
     await flush();
@@ -121,45 +140,86 @@ describe("the goals section read", () => {
   });
 
   /**
-   * A refused read answers as an empty goal list today, which is also what a
-   * workspace with no goals answers. The drawer then hides the section, so a
-   * machine that could not be read looks like a workspace with nothing in it.
+   * A refused read answered as an empty goal list once, which is also what a workspace with no
+   * goals answers, so a machine that refused looked like one with nothing in it.
    */
-  it("says a failed read could not be read instead of showing an empty workspace", async () => {
-    const callOperation = vi.fn(async () => { throw new Error("machine down"); });
-    const section = sectionOf(callOperation);
+  it("says a read the machine refused could not be read instead of showing an empty workspace", async () => {
+    const callOperation = vi.fn(async () => { throw new Error("forbidden"); });
+    const { panel: section } = sectionOf(callOperation, () => ({ kind: "final", words: "forbidden" }));
     const harness = harnessFor(section, "/w/session-a");
     harness.draw();
     await flush();
     expect(await shownText(harness.container)).toContain("could not");
   });
 
-  /**
-   * Owner, 2026-09-30: "just say there are no goals". A workspace with no goals says so and keeps its refresh; the
-   * section used to leave the drawer, and nothing read it again, so a goal created later in the
-   * same session never appeared.
-   */
-  it("says there are no goals, and keeps its refresh", async () => {
-    const callOperation = vi.fn(async () => ({ goals: [], brokenFiles: 0 }));
-    const section = sectionOf(callOperation);
+  /** B48 (owner, 2026-10-13): a read that got no answer is retried, never shown as a failure. */
+  it("keeps reading after a read that got no answer, and shows the answer when it comes", async () => {
+    const callOperation = vi.fn()
+      .mockRejectedValueOnce(new Error("The server did not answer within 30s."))
+      .mockResolvedValueOnce({ goals: [goal("later")], brokenFiles: 0 });
+    const { panel: section } = sectionOf(callOperation, () => ({ kind: "retry", delayMs: 1 }));
     const harness = harnessFor(section, "/w/session-a");
     harness.draw();
     await flush();
+    await flush();
 
-    expect({
-      text: await shownText(harness.container),
-      refresh: harness.container.querySelector("pi-web-goals-section")?.shadowRoot?.querySelector("button.refresh") instanceof HTMLButtonElement,
-    }).toEqual({ text: expect.stringContaining("No goals in this project.") as unknown, refresh: true });
+    expect({ calls: callOperation.mock.calls.length, text: await shownText(harness.container) }).toEqual({ calls: 2, text: "goal later" });
   });
 
-  it("keeps a newer refresh's answer when an earlier read answers late", async () => {
-    const answers: ((value: unknown) => void)[] = [];
-    const callOperation = vi.fn(() => new Promise<unknown>((resolve) => { answers.push(resolve); }));
-    const section = sectionOf(callOperation);
+  /**
+   * Owner, 2026-09-30: "just say there are no goals". Owner, 2026-10-13: in the same dashed box
+   * the Background and Subagents pages use for none.
+   */
+  it("says there are no goals in the host list's empty box", async () => {
+    const callOperation = vi.fn(async () => ({ goals: [], brokenFiles: 0 }));
+    const { panel: section } = sectionOf(callOperation);
     const harness = harnessFor(section, "/w/session-a");
     harness.draw();
-    const element = harness.container.querySelector("pi-web-goals-section") as (HTMLElement & { onRefresh?: () => void }) | null;
-    element?.onRefresh?.();
+
+    expect(await shownText(harness.container)).toBe("[box] No goals in this project.");
+  });
+
+  /**
+   * The section once left the drawer when empty and nothing read it again, so a goal created later
+   * in the same session never appeared. With no refresh button, a settled turn reads again.
+   */
+  it("re-reads when a turn of the selected session settles", async () => {
+    const callOperation = vi.fn()
+      .mockResolvedValueOnce({ goals: [], brokenFiles: 0 })
+      .mockResolvedValueOnce({ goals: [goal("created")], brokenFiles: 0 });
+    const { panel: section, settleActivity } = sectionOf(callOperation);
+    const harness = harnessFor(section, "/w/session-a");
+    harness.draw();
+    expect(await shownText(harness.container)).toBe("[box] No goals in this project.");
+
+    settleActivity();
+
+    expect({ calls: callOperation.mock.calls.length, text: await shownText(harness.container) }).toEqual({ calls: 2, text: "goal created" });
+  });
+
+  /** Goals belong to the project: another session of it can create one while this page is closed. */
+  it("re-reads each time the page is opened, and once when first shown", async () => {
+    const callOperation = vi.fn()
+      .mockResolvedValueOnce({ goals: [], brokenFiles: 0 })
+      .mockResolvedValueOnce({ goals: [goal("elsewhere")], brokenFiles: 0 });
+    const { panel: section } = sectionOf(callOperation);
+    const harness = harnessFor(section, "/w/session-a");
+    harness.draw();
+    await flush();
+    expect(callOperation).toHaveBeenCalledTimes(1);
+
+    await section.onInvalidate?.(harness.context);
+
+    expect({ calls: callOperation.mock.calls.length, text: await shownText(harness.container) }).toEqual({ calls: 2, text: "goal elsewhere" });
+  });
+
+  it("keeps a newer read's answer when an earlier read answers late", async () => {
+    const answers: ((value: unknown) => void)[] = [];
+    const callOperation = vi.fn(() => new Promise<unknown>((resolve) => { answers.push(resolve); }));
+    const { panel: section, settleActivity } = sectionOf(callOperation);
+    const harness = harnessFor(section, "/w/session-a");
+    harness.draw();
+    settleActivity();
     answers[1]?.({ goals: [goal("newer")], brokenFiles: 0 });
     await flush();
     answers[0]?.({ goals: [goal("older")], brokenFiles: 0 });

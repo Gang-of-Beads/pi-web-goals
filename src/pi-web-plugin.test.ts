@@ -1,6 +1,7 @@
+// @vitest-environment happy-dom
 import { html, svg } from "lit";
 import { describe, expect, it } from "vitest";
-import { badgeFor, goalsSectionStyles, progressLabel } from "./goalsSectionElement.js";
+import { badgeFor, goalsListModel, progressLabel } from "./goalsList.js";
 import type { GoalRecordSummary } from "./goalRecords.js";
 import plugin from "./pi-web-plugin.js";
 
@@ -30,15 +31,18 @@ describe("the Goals page", () => {
     }).toEqual({ panels: [["goals", "Goals"]], drawer: false });
   });
 
-  /**
-   * Inside the old drawer the section borrowed the drawer's padding; as a page it has none of its
-   * own, and on a 393 px phone the goal's status dot sat on the screen edge, half cut. A page owns
-   * its inset and its scroll, like every other plugin page.
-   */
-  it("insets its content from the reading edge and scrolls on its own", () => {
-    const host = /:host\s*\{([^}]*)\}/u.exec(goalsSectionStyles)?.[1] ?? "";
-    expect(host).toMatch(/padding:[^;]*var\(--pi-reading-edge\)/u);
-    expect(host).toMatch(/overflow:\s*auto/u);
+  it("lists each goal with its objective, status and task progress", () => {
+    const model = goalsListModel("read", { goals: [record(), record({ id: "goal-2", objective: "Done one", status: "complete" })], brokenFiles: 0 });
+    expect(model.groups.flatMap((group) => group.rows)).toEqual([
+      { id: "goal-1", title: "Ship the thing", status: { label: "active", tone: "good" }, detail: "2/5 tasks" },
+      { id: "goal-2", title: "Done one", value: "complete", detail: "5/5 tasks" },
+    ]);
+  });
+
+  it("keeps showing the last answer as read while a re-read runs, and says reading before any answer", () => {
+    expect(goalsListModel("reading", { goals: [], brokenFiles: 0 }).read).toBe("ready");
+    expect(goalsListModel("reading", undefined).read).toBe("reading");
+    expect(goalsListModel("failed", { goals: [], brokenFiles: 0 }).read).toBe("failed");
   });
 
   it("badges the remaining task count and stays quiet when nothing remains", () => {
