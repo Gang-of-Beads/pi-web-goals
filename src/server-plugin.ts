@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { isAbsolute, join, resolve } from "node:path";
-import type { PiWebServerPlugin, ServerPluginOperation } from "@gang-of-beads/pi-web/server-plugin-api";
+import type { PiWebServerPlugin, ServerPluginOperation } from "@gang-of-beads/pi-web-plugin-api/server-plugin-api";
 import { GOALS_DIRECTORY, MAX_GOAL_FILES, leadingJsonObject, parseGoalRecord, sortGoalRecords, type GoalDirectoryReading, type GoalRecordSummary } from "./goalRecords.js";
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);

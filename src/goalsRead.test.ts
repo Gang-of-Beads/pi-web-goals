@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { html as litHtml, render as litRender, svg as litSvg } from "lit";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PluginActivationContext, PluginListModel, WorkspacePanelContext, WorkspacePanelContribution } from "@gang-of-beads/pi-web/plugin-api";
+import type { PluginActivationContext, PluginListModel, WorkspacePanelContext, WorkspacePanelContribution } from "@gang-of-beads/pi-web-plugin-api/plugin-api";
 import type { GoalRecordSummary } from "./goalRecords.js";
 import plugin from "./pi-web-plugin.js";
 

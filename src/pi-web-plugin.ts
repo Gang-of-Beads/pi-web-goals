@@ -1,4 +1,4 @@
-import type { PiWebPlugin, PluginActivationContext, WorkspacePanelContext } from "@gang-of-beads/pi-web/plugin-api";
+import type { PiWebPlugin, PluginActivationContext, WorkspacePanelContext } from "@gang-of-beads/pi-web-plugin-api/plugin-api";
 import { html, svg } from "lit";
 import { badgeFor, goalsListModel, type GoalsReadState, type GoalsSectionState } from "./goalsList.js";
 import type { GoalRecordSummary } from "./goalRecords.js";
