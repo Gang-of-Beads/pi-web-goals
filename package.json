@@ -1,6 +1,6 @@
 {
   "name": "@gang-of-beads/pi-web-goals",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "PI WEB plugin for pi-goal: a Goals tab listing the project's goals with their status and task progress, and short rows for goal events in the conversation.",
   "license": "MIT",
   "type": "module",

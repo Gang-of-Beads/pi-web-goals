@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Built against `@gang-of-beads/pi-web-plugin-api`, the plugin contract package PI WEB publishes for plugin repositories, instead of the whole PI WEB package. Only the build changed: the published plugin code is the same as 0.1.1's.
+
 ## 0.1.1
 
 - The Goals tab is drawn by PI WEB's status list, like the Background and Subagents tabs: "reading", "no goals" and "could not read" show in the same centred box, and every goal of the project is a row with its objective, its status and its task progress.
