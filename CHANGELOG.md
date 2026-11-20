@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 - 2026-11-20
 
 - Follow pi-goal 1.0, which keeps its goals as JSON files in the agent directory (`<agent dir>/pi-goal/goals/<sha256 of the project path>/`) and no longer in the project: the Goals tab reads that layout, from `PI_CODING_AGENT_DIR` or `~/.pi/agent`. The old `.pi/goals/*.md` files are still read for a workspace whose goals were never moved.
 - Goals are drawn with pi-goal's current states and their TODO progress; a status a later pi-goal adds is drawn as it is spelled instead of being dropped.
