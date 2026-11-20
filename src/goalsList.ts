@@ -6,6 +6,11 @@ export interface GoalsSectionState {
   brokenFiles: number;
 }
 
+/** Finished goals, the same list as in goalRecords, kept here because the browser bundle cannot
+ *  import that module's node built-ins. */
+const FINISHED_STATUSES: readonly string[] = ["done", "cancelled", "complete"];
+const isFinished = (status: string): boolean => FINISHED_STATUSES.includes(status);
+
 /** Where the latest goals read stands for the scope on screen. */
 export type GoalsReadState = "reading" | "read" | "failed";
 
@@ -24,7 +29,7 @@ export function activeGoal(state: GoalsSectionState | undefined): GoalRecordSumm
 
 export function progressLabel(goal: GoalRecordSummary): string | undefined {
   if (goal.tasksTotal === 0) return undefined;
-  if (goal.status === "complete") return `${String(goal.tasksTotal)}/${String(goal.tasksTotal)} tasks`;
+  if (isFinished(goal.status)) return `${String(goal.tasksTotal)}/${String(goal.tasksTotal)} tasks`;
   return `${String(goal.tasksDone)}/${String(goal.tasksTotal)} tasks`;
 }
 
@@ -32,23 +37,34 @@ export function badgeFor(state: GoalsSectionState | undefined): string | number 
   const goal = activeGoal(state);
   if (goal === undefined) return undefined;
   const remaining = goal.tasksTotal - goal.tasksDone;
-  if (goal.status === "complete" || remaining <= 0) return undefined;
+  if (isFinished(goal.status) || remaining <= 0) return undefined;
   return remaining;
 }
 
 type RowSide = Pick<PluginListRow, "status" | "value">;
 
+/** pi-goal's own words for its states, what needs the reader first; `complete` and `active` are 0.1.x's. */
 const ROW_SIDE: Readonly<Record<GoalStatus, RowSide>> = {
-  active: { status: { label: "active", tone: "good" } },
+  running: { status: { label: "running", tone: "good" } },
+  review: { status: { label: "awaiting review", tone: "attention" } },
+  "awaiting review": { status: { label: "awaiting review", tone: "attention" } },
+  clarifying: { status: { label: "awaiting clarification", tone: "attention" } },
+  "awaiting clarification": { status: { label: "awaiting clarification", tone: "attention" } },
+  pending: { status: { label: "ready to run", tone: "neutral" } },
   paused: { status: { label: "paused", tone: "neutral" } },
   budget_limited: { status: { label: "budget limited", tone: "attention" } },
   blocked: { status: { label: "blocked", tone: "problem" } },
+  done: { value: "done" },
+  cancelled: { value: "cancelled" },
+  active: { status: { label: "active", tone: "good" } },
   complete: { value: "complete" },
 };
 
 function goalRow(goal: GoalRecordSummary): PluginListRow {
   const progress = progressLabel(goal);
-  return { id: goal.id, title: goal.objective, ...ROW_SIDE[goal.status], ...(progress === undefined ? {} : { detail: progress }) };
+  // A status pi-goal added after this table is drawn as it is spelled rather than dropped.
+  const side = ROW_SIDE[goal.status as GoalStatus] ?? { status: { label: goal.status, tone: "neutral" as const } };
+  return { id: goal.id, title: goal.objective, ...side, ...(progress === undefined ? {} : { detail: progress }) };
 }
 
 /**

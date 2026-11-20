@@ -4,8 +4,9 @@ import { badgeFor, goalsListModel, type GoalsReadState, type GoalsSectionState }
 import type { GoalRecordSummary } from "./goalRecords.js";
 import { goalEventSummary } from "./goalEventSummary.js";
 
-/** Goal lifecycle messages this plugin draws; the shell knows none of them. */
-const GOAL_EVENT_TAGS = ["pi-goal-audit-event", "pi-goal-guard", "pi-goal-draft", "pi-goal-focus"];
+/** Goal lifecycle messages this plugin draws; the shell knows none of them. pi-goal 1.0 emits
+ *  `pi-goal-continue`; the other four are the 0.1.x tags, kept for goals still running on it. */
+const GOAL_EVENT_TAGS = ["pi-goal-audit-event", "pi-goal-guard", "pi-goal-draft", "pi-goal-focus", "pi-goal-continue"];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
 
