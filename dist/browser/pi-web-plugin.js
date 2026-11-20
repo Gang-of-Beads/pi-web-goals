@@ -1,3 +1,5 @@
+/*! Bundles Lit, BSD-3-Clause: see THIRD_PARTY_NOTICES.md */
+
 // node_modules/@lit/reactive-element/css-tag.js
 var t = globalThis;
 var e = t.ShadowRoot && (void 0 === t.ShadyCSS || t.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype;
