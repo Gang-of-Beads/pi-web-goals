@@ -16,6 +16,7 @@ const TITLES: Record<string, string> = {
   "pi-goal-guard": "Goal guard",
   "pi-goal-draft": "Goal draft",
   "pi-goal-focus": "Goal focus",
+  "pi-goal-continue": "Goal continues",
 };
 
 const PHASES: Record<string, string> = {
@@ -30,6 +31,7 @@ const PHASES: Record<string, string> = {
 function read(payload: unknown, key: string): string | undefined {
   if (typeof payload !== "object" || payload === null) return undefined;
   const value: unknown = Reflect.get(payload, key);
+  if (typeof value === "number") return String(value);
   return typeof value === "string" && value !== "" ? value : undefined;
 }
 

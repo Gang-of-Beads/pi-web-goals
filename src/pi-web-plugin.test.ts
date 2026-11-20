@@ -31,6 +31,20 @@ describe("the Goals page", () => {
     }).toEqual({ panels: [["goals", "Goals"]], drawer: false });
   });
 
+  /** pi-goal 1.0's own states; a status it adds later still gets a row, spelled as pi-goal wrote it. */
+  it("draws pi-goal's states in its own words and an unknown one as it is spelled", () => {
+    const rows = goalsListModel("read", {
+      goals: [record({ status: "review" }), record({ id: "goal-3", status: "cancelled" }), record({ id: "goal-4", status: "budget_exhausted" })],
+      brokenFiles: 0,
+    }).groups.flatMap((group) => group.rows);
+    expect(rows.map((row) => row.status?.label ?? row.value)).toEqual(["awaiting review", "cancelled", "budget_exhausted"]);
+  });
+
+  it("draws the goal turns pi-goal 1.0 injects, and the 0.1.x events", () => {
+    const tags = (plugin.activate(activationContext).contributions.messageRenderers ?? []).map((renderer) => renderer.tag);
+    expect(tags).toEqual(["pi-goal-audit-event", "pi-goal-guard", "pi-goal-draft", "pi-goal-focus", "pi-goal-continue"]);
+  });
+
   it("lists each goal with its objective, status and task progress", () => {
     const model = goalsListModel("read", { goals: [record(), record({ id: "goal-2", objective: "Done one", status: "complete" })], brokenFiles: 0 });
     expect(model.groups.flatMap((group) => group.rows)).toEqual([

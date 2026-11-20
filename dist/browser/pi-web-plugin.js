@@ -541,6 +541,8 @@ o4?.({ LitElement: i4 });
 (s3.litElementVersions ??= []).push("4.2.2");
 
 // src/goalsList.ts
+var FINISHED_STATUSES = ["done", "cancelled", "complete"];
+var isFinished = (status) => FINISHED_STATUSES.includes(status);
 function emptyGoalsWords(brokenFiles) {
   if (brokenFiles === 0) return "No goals in this project.";
   return `${String(brokenFiles)} goal ${brokenFiles === 1 ? "file" : "files"} in this project could not be read.`;
@@ -550,26 +552,35 @@ function activeGoal(state) {
 }
 function progressLabel(goal) {
   if (goal.tasksTotal === 0) return void 0;
-  if (goal.status === "complete") return `${String(goal.tasksTotal)}/${String(goal.tasksTotal)} tasks`;
+  if (isFinished(goal.status)) return `${String(goal.tasksTotal)}/${String(goal.tasksTotal)} tasks`;
   return `${String(goal.tasksDone)}/${String(goal.tasksTotal)} tasks`;
 }
 function badgeFor(state) {
   const goal = activeGoal(state);
   if (goal === void 0) return void 0;
   const remaining = goal.tasksTotal - goal.tasksDone;
-  if (goal.status === "complete" || remaining <= 0) return void 0;
+  if (isFinished(goal.status) || remaining <= 0) return void 0;
   return remaining;
 }
 var ROW_SIDE = {
-  active: { status: { label: "active", tone: "good" } },
+  running: { status: { label: "running", tone: "good" } },
+  review: { status: { label: "awaiting review", tone: "attention" } },
+  "awaiting review": { status: { label: "awaiting review", tone: "attention" } },
+  clarifying: { status: { label: "awaiting clarification", tone: "attention" } },
+  "awaiting clarification": { status: { label: "awaiting clarification", tone: "attention" } },
+  pending: { status: { label: "ready to run", tone: "neutral" } },
   paused: { status: { label: "paused", tone: "neutral" } },
   budget_limited: { status: { label: "budget limited", tone: "attention" } },
   blocked: { status: { label: "blocked", tone: "problem" } },
+  done: { value: "done" },
+  cancelled: { value: "cancelled" },
+  active: { status: { label: "active", tone: "good" } },
   complete: { value: "complete" }
 };
 function goalRow(goal) {
   const progress = progressLabel(goal);
-  return { id: goal.id, title: goal.objective, ...ROW_SIDE[goal.status], ...progress === void 0 ? {} : { detail: progress } };
+  const side = ROW_SIDE[goal.status] ?? { status: { label: goal.status, tone: "neutral" } };
+  return { id: goal.id, title: goal.objective, ...side, ...progress === void 0 ? {} : { detail: progress } };
 }
 function listRead(read2, answer) {
   if (read2 === "failed") return "failed";
@@ -593,7 +604,8 @@ var TITLES = {
   "pi-goal-audit-event": "Goal audit",
   "pi-goal-guard": "Goal guard",
   "pi-goal-draft": "Goal draft",
-  "pi-goal-focus": "Goal focus"
+  "pi-goal-focus": "Goal focus",
+  "pi-goal-continue": "Goal continues"
 };
 var PHASES = {
   start: "started",
@@ -606,6 +618,7 @@ var PHASES = {
 function read(payload, key) {
   if (typeof payload !== "object" || payload === null) return void 0;
   const value = Reflect.get(payload, key);
+  if (typeof value === "number") return String(value);
   return typeof value === "string" && value !== "" ? value : void 0;
 }
 function goalEventSummary(tag, payload, content) {
@@ -623,7 +636,7 @@ function goalEventSummary(tag, payload, content) {
 }
 
 // src/pi-web-plugin.ts
-var GOAL_EVENT_TAGS = ["pi-goal-audit-event", "pi-goal-guard", "pi-goal-draft", "pi-goal-focus"];
+var GOAL_EVENT_TAGS = ["pi-goal-audit-event", "pi-goal-guard", "pi-goal-draft", "pi-goal-focus", "pi-goal-continue"];
 var isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 var isGoalSummary = (value) => {
   if (!isRecord(value)) return false;

@@ -2,13 +2,15 @@
 
 A [PI WEB](https://github.com/Gang-of-Beads/pi-web) plugin for [pi-goal](https://github.com/Gang-of-Beads/pi-goal), the goal-mode extension for pi.
 
-- A **Goals** tab beside the conversation lists the project's goals with their status and task progress; its badge shows how many tasks the active goal has left. The tab shows only where the extension is loaded.
-- Goal events pi-goal writes into the conversation (audits, guards, drafts, focus changes) are drawn as short rows instead of raw payloads.
+- A **Goals** tab beside the conversation lists the project's goals with their status and TODO progress; its badge shows how many TODOs the active goal has left. The tab shows only where the extension is loaded.
+- Goal turns pi-goal injects into the conversation (continued goals) and the 0.1.x goal events (audits, guards, drafts, focus changes) are drawn as short rows instead of raw payloads.
+
+PI WEB ships a bundled **Goal** page of its own, so this package is optional: it is the small plugin for the Goals tab alone.
 
 ## Requirements
 
 - PI WEB 2.202610.5 or later. Earlier releases bundle their own copy of this plugin, which wins over an installed one (Settings → PI WEB plugins reports the duplicate id).
-- The pi-goal extension installed in pi.
+- The pi-goal extension in pi, version 1.0.0 or later. Goal files of pi-goal 0.1.x (`<project>/.pi/goals/*.md`) are still read as a fallback for a workspace whose goals were never moved to the current layout.
 
 ## Install
 
@@ -22,7 +24,9 @@ The plugin has a server part, so restart the PI WEB session daemon, then reload 
 
 ## How it works
 
-The server part runs inside the PI WEB session daemon and only reads. It answers the browser's `goals.list` operation from the goal files pi-goal keeps in the project (`.pi/goals/*.md`); a session working in a subfolder of the project also sees that folder's goals, which take precedence by id. A goal file that cannot be parsed is skipped and counted; when no goal could be read, the tab says how many files failed instead of claiming the project has none. The tab reads the goals again when a turn of the selected session ends and each time it is opened. It declares the `goals` surface for pi-goal's tools, so PI WEB shows the tab only where those tools are loaded. The plugin is machine-specific: with several machines, each machine's own copy reads that machine's goals.
+The server part runs inside the PI WEB session daemon and only reads. It answers the browser's `goals.list` operation from the goal files pi-goal keeps for the project, one JSON file per goal in `<agent dir>/pi-goal/goals/<sha256 of the project path>/`, where the agent directory is `PI_CODING_AGENT_DIR` or else `~/.pi/agent`; nothing is read from the project. A workspace with no goal there is read from its own `.pi/goals/*.md` files instead, which is how goals of pi-goal 0.1.x stay visible until they are moved to the current layout. A session working in a subfolder of the project also sees that folder's goals, which take precedence by id.
+
+Goals are drawn with pi-goal's own states - `running`, `awaiting review`, `awaiting clarification`, `ready to run`, `paused`, `blocked`, `budget limited`, `done`, `cancelled` - and the TODO count comes from the goal's TODOs. A status a later pi-goal adds is drawn as it is spelled. A goal file that cannot be parsed is skipped and counted; when no goal could be read, the tab says how many files failed instead of claiming the project has none. The tab reads the goals again when a turn of the selected session ends and each time it is opened. It declares the `goals` surface for pi-goal's tools, so PI WEB shows the tab only where those tools are loaded. The plugin is machine-specific: with several machines, each machine's own copy reads that machine's goals.
 
 ## Development
 

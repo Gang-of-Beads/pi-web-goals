@@ -8,6 +8,10 @@ describe("goalEventSummary", () => {
     expect(goalEventSummary("pi-goal-unknown-thing", {}).title).toBe("Goal event");
   });
 
+  it("names a continued goal turn and reads the goal it is about", () => {
+    expect(goalEventSummary("pi-goal-continue", { goalId: 4 })).toEqual({ title: "Goal continues", detail: "4" });
+  });
+
   it("reads the phase, the auditor and the goal it is about", () => {
     expect(goalEventSummary("pi-goal-audit-event", { phase: "start", auditor: "opus", goalId: "g1" }).detail)
       .toBe("started · opus · g1");
