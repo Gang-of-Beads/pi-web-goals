@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Require plugin API alpha.10.
+- Ship the BSD-3 notice for the Lit the browser bundle inlines.
+
 ## 0.2.0
 
 - Follow pi-goal 1.0, which keeps its goals as JSON files in the agent directory (`<agent dir>/pi-goal/goals/<sha256 of the project path>/`) and no longer in the project: the Goals tab reads that layout, from `PI_CODING_AGENT_DIR` or `~/.pi/agent`. The old `.pi/goals/*.md` files are still read for a workspace whose goals were never moved.
