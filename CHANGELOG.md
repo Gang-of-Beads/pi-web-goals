@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Superseded by PI WEB's bundled `goal` plugin; repository archived and the package deprecated on npm.
+
 ## 0.2.1
 
 - Require plugin API alpha.10.

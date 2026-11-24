@@ -1,5 +1,7 @@
 # pi-web-goals
 
+> **Superseded.** PI WEB ships a `goal` plugin itself, which draws the same Goals pages and the same transcript cards. This package still works, but installing it beside a PI WEB that bundles `goal` gives two pages for one extension. The repository is archived.
+
 A [PI WEB](https://github.com/Gang-of-Beads/pi-web) plugin for [pi-goal](https://github.com/Gang-of-Beads/pi-goal), the goal-mode extension for pi.
 
 - A **Goals** tab beside the conversation lists the project's goals with their status and TODO progress; its badge shows how many TODOs the active goal has left. The tab shows only where the extension is loaded.
